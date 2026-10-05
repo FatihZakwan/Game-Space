@@ -12,6 +12,15 @@ window.GAMES = [
     status: "ready"
   },
   {
+    id: "azure-cloud",
+    title: "Azure Cloud",
+    desc: "Akses Azure Cloud dengan tanganmu.",
+    note: "Butuh webcam",
+    path: "games/azure-cloud/index.html",
+    color: "#59d9c4",
+    status: "ready"
+  },
+  {
     id: "tic-tac-toe",
     title: "Tic Tac Toe",
     desc: "Susun tiga tanda berurutan sebelum lawanmu.",
@@ -28,5 +37,5 @@ window.GAMES = [
     path: "games/ninja-samurai/index.html",
     color: "#c0563f",
     status: "soon"
-  }
+  },
 ];
