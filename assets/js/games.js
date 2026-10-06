@@ -12,11 +12,11 @@ window.GAMES = [
     status: "ready"
   },
   {
-    id: "azure-cloud",
-    title: "Azure Cloud",
-    desc: "Akses Azure Cloud dengan tanganmu.",
+    id: "kiem-than",
+    title: "Kiem Than",
+    desc: "Mainkan permainan Kiem Than dengan tanganmu.",
     note: "Butuh webcam",
-    path: "games/azure-cloud/index.html",
+    path: "games/kiem-than/index.html",
     color: "#59d9c4",
     status: "ready"
   },
