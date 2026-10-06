@@ -16,7 +16,7 @@ window.GAMES = [
     title: "Kiem Than",
     desc: "Mainkan permainan Kiem Than dengan tanganmu.",
     note: "Butuh webcam",
-    path: "games/kiem-than/index.html",
+    path: "games/kiem-than/dist/index.html",
     color: "#59d9c4",
     status: "ready"
   },
