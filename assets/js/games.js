@@ -21,6 +21,15 @@ window.GAMES = [
     status: "ready"
   },
   {
+    id: "cyber-saber",
+    title: "Cyber Neon Saber",
+    desc: "Game ritme lightsaber interaktif dengan efek neon futuristik.",
+    note: "Butuh webcam",
+    path: "games/cyber-saber/index.html",
+    color: "#ef1616",
+    status: "ready"
+  },
+  {
     id: "tic-tac-toe",
     title: "Tic Tac Toe",
     desc: "Susun tiga tanda berurutan sebelum lawanmu.",
