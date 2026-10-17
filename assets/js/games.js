@@ -25,7 +25,7 @@ window.GAMES = [
     title: "Cyber Neon Saber",
     desc: "Game ritme lightsaber interaktif dengan efek neon futuristik.",
     note: "Butuh webcam",
-    path: "games/cyber-saber/index.html",
+    path: "games/cyber-saber/dist/index.html",
     color: "#ef1616",
     status: "ready"
   },
