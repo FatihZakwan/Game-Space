@@ -9,7 +9,7 @@ window.GAMES = [
     note: "Butuh webcam",
     path: "games/3d-shape/index.html",
     color: "#59d9c4",
-    status: "ready"
+    status: "ready",
   },
   {
     id: "kiem-than",
@@ -18,7 +18,7 @@ window.GAMES = [
     note: "Butuh webcam",
     path: "games/kiem-than/dist/index.html",
     color: "#59d9c4",
-    status: "ready"
+    status: "ready",
   },
   {
     id: "cyber-saber",
@@ -27,7 +27,7 @@ window.GAMES = [
     note: "Butuh webcam",
     path: "games/cyber-saber/dist/index.html",
     color: "#ef1616",
-    status: "ready"
+    status: "ready",
   },
   {
     id: "tic-tac-toe",
@@ -36,7 +36,7 @@ window.GAMES = [
     note: "",
     path: "games/tic-tac-toe/index.html",
     color: "#e8a23b",
-    status: "soon"
+    status: "ready",
   },
   {
     id: "ninja-samurai",
@@ -45,6 +45,6 @@ window.GAMES = [
     note: "",
     path: "games/ninja-samurai/index.html",
     color: "#c0563f",
-    status: "soon"
+    status: "soon",
   },
 ];
