@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Space Rocket Explorer - CV</title>
+  <!-- MediaPipe & Camera Utils -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #020617;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    video {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+  </div>
+  <video id="webcam" autoplay playsinline></video>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    const video = document.getElementById("webcam");
+
+    let WIDTH = window.innerWidth;
+    let HEIGHT = window.innerHeight;
+
+    function resizeCanvas() {
+      WIDTH = window.innerWidth;
+      HEIGHT = window.innerHeight;
+      canvas.width = WIDTH;
+      canvas.height = HEIGHT;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Posisi Roket
+    let rocketX = WIDTH / 2;
+    let rocketY = HEIGHT / 2;
+    let targetX = WIDTH / 2;
+    let targetY = HEIGHT / 2;
+
+    // Bintang-bintang di Luar Angkasa (Background Parallax)
+    let stars = [];
+    for (let i = 0; i < 150; i++) {
+      stars.push({
+        x: Math.random() * WIDTH,
+        y: Math.random() * HEIGHT,
+        size: Math.random() * 2.5 + 0.5,
+        speed: Math.random() * 2 + 0.5
+      });
+    }
+
+    // Meteor / Asteroid sebagai Rintangan / Objek Eksplorasi
+    let meteors = [];
+    for (let i = 0; i < 5; i++) {
+      meteors.push({
+        x: Math.random() * WIDTH + WIDTH,
+        y: Math.random() * HEIGHT,
+        radius: Math.random() * 25 + 15,
+        speed: Math.random() * 3 + 2
+      });
+    }
+
+    let score = 0;
+    let isHandActive = false;
+
+    // Menggambar Karakter Roket Angkasa
+    function drawRocket(x, y) {
+      ctx.save();
+      ctx.translate(x, y);
+      // Rotasi sedikit mengikuti arah gerakan horizontal
+      let angle = (targetX - rocketX) * 0.002;
+      ctx.rotate(angle);
+
+      // Api Roket (Pdorong)
+      ctx.beginPath();
+      ctx.moveTo(-8, 15);
+      ctx.lineTo(0, 35 + Math.random() * 15);
+      ctx.lineTo(8, 15);
+      ctx.fillStyle = "#f97316";
+      ctx.fill();
+
+      // Badan Roket Utama
+      ctx.beginPath();
+      ctx.moveTo(0, -25);
+      ctx.lineTo(15, 15);
+      ctx.lineTo(-15, 15);
+      ctx.closePath();
+      ctx.fillStyle = "#e2e8f0";
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#0f172a";
+      ctx.stroke();
+
+      // Jendela Roket (Kaca)
+      ctx.beginPath();
+      ctx.arc(0, -2, 5, 0, Math.PI * 2);
+      ctx.fillStyle = "#38bdf8";
+      ctx.fill();
+      ctx.stroke();
+
+      // Sayap Kiri & Kanan
+      ctx.beginPath();
+      ctx.moveTo(-15, 5);
+      ctx.lineTo(-25, 20);
+      ctx.lineTo(-15, 15);
+      ctx.fillStyle = "#ef4444";
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(15, 5);
+      ctx.lineTo(25, 20);
+      ctx.lineTo(15, 15);
+      ctx.fillStyle = "#ef4444";
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function onResults(results) {
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const landmarks = results.multiHandLandmarks[0];
+        // Mengontrol koordinat roket berdasarkan ujung jari telunjuk
+        targetX = (1 - landmarks[8].x) * WIDTH;
+        targetY = landmarks[8].y * HEIGHT;
+        isHandActive = true;
+      } else {
+        isHandActive = false;
+      }
+
+      updateAndDraw(results.image);
+    }
+
+    function updateAndDraw(videoFrame) {
+      ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+      // 1. Render Video Kamera sebagai Transparan/Latar Belakang Kosmik
+      ctx.save();
+      ctx.scale(-1, 1);
+      ctx.globalAlpha = 0.25; // Transparan agar efek luar angkasa lebih dominan
+      ctx.drawImage(videoFrame, -WIDTH, 0, WIDTH, HEIGHT);
+      ctx.restore();
+
+      // 2. Render Bintang Bergerak
+      ctx.fillStyle = "#ffffff";
+      stars.forEach(star => {
+        star.x -= star.speed;
+        if (star.x < 0) star.x = WIDTH;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 3. Gerakan Roket Mendekati Posisi Jari (Smooth Interpolation / Lerp)
+      rocketX += (targetX - rocketX) * 0.1;
+      rocketY += (targetY - rocketY) * 0.1;
+
+      // 4. Render & Update Meteor
+      meteors.forEach(meteor => {
+        meteor.x -= meteor.speed;
+        if (meteor.x < -50) {
+          meteor.x = WIDTH + Math.random() * 200;
+          meteor.y = Math.random() * HEIGHT;
+          score += 1;
+        }
+
+        ctx.beginPath();
+        ctx.arc(meteor.x, meteor.y, meteor.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#64748b";
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "#334155";
+        ctx.stroke();
+
+        // Cek Tabrakan Roket dengan Meteor
+        let distX = rocketX - meteor.x;
+        let distY = rocketY - meteor.y;
+        let distance = Math.sqrt(distX * distX + distY * distY);
+        if (distance < meteor.radius + 15) {
+          // Efek tabrakan (skor berkurang / reset posisi meteor)
+          meteor.x = WIDTH + 100;
+        }
+      });
+
+      // 5. Gambar Roket
+      drawRocket(rocketX, rocketY);
+
+      // 6. HUD Skor & Status Tangan
+      ctx.fillStyle = "#38bdf8";
+      ctx.font = "bold 28px sans-serif";
+      ctx.fillText(`Eksplorasi Skor: ${score}`, 40, 60);
+
+      ctx.fillStyle = isHandActive ? "#22c55e" : "#ef4444";
+      ctx.font = "16px sans-serif";
+      ctx.fillText(isHandActive ? "Status: Tangan Terdeteksi (Mengemudi)" : "Status: Arahkan tangan ke kamera", 40, 95);
+    }
+
+    const hands = new Hands({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    });
+    hands.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+    hands.onResults(onResults);
+
+    const camera = new Camera(video, {
+      onFrame: async () => {
+        await hands.send({ image: video });
+      },
+      width: 1280,
+      height: 720
+    });
+    camera.start();
+  </script>
+</body>
+</html>

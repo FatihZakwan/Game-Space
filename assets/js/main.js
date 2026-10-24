@@ -1,8 +1,22 @@
 (function () {
   "use strict";
 
+  // Fungsi penentu ikon logo berdasarkan ID atau Nama Game
+  function getGameIcon(game) {
+    var id = (game.id || "").toLowerCase();
+    var title = (game.title || "").toLowerCase();
+
+    if (id.includes("3d") || title.includes("3d")) return "🧊";
+    if (id.includes("kiem") || title.includes("kiem") || id.includes("azure") || title.includes("azure")) return "⚔️";
+    if (id.includes("flappy") || title.includes("flappy") || id.includes("bird") || title.includes("bird")) return "🐦";
+    if (id.includes("space") || title.includes("space") || id.includes("explorer") || title.includes("explorer")) return "🚀";
+    return "🪐";
+  }
+
   // ---------- Kartu planet (dibuat dari window.GAMES) ----------
   var wrap = document.getElementById("planets");
+  if (!wrap) return;
+
   (window.GAMES || []).forEach(function (g) {
     var ready = g.status === "ready";
     var el = document.createElement(ready ? "a" : "div");
@@ -10,13 +24,18 @@
     el.style.setProperty("--c", g.color);
     if (ready) el.href = g.path; else el.setAttribute("aria-disabled", "true");
 
+    var icon = getGameIcon(g);
+
     el.innerHTML =
-      '<span class="orb" aria-hidden="true"></span>' +
+      '<span class="orb" aria-hidden="true">' +
+        '<span class="orb-icon">' + icon + '</span>' +
+      '</span>' +
       '<span class="info">' +
         '<span class="name"></span>' +
         '<span class="desc"></span>' +
         '<span class="meta"></span>' +
       '</span>';
+
     el.querySelector(".name").textContent = g.title;
     el.querySelector(".desc").textContent = g.desc;
     el.querySelector(".meta").textContent =
@@ -26,6 +45,7 @@
 
   // ---------- Latar bintang ----------
   var cv = document.getElementById("stars");
+  if (!cv) return;
   var ctx = cv.getContext("2d");
   var stars = [], W = 0, H = 0;
   var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
