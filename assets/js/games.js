@@ -9,7 +9,7 @@ window.GAMES = [
     status: "ready",
   },
   {
-    id: "kiem-than",
+    id: "Azure Cloud",
     title: "Kiem Than",
     desc: "Mainkan permainan Kiem Than dengan tanganmu.",
     note: "Butuh webcam",
@@ -25,24 +25,6 @@ window.GAMES = [
     path: "games/cyber-saber/dist/index.html",
     color: "#ef1616",
     status: "ready",
-  },
-  {
-    id: "tic-tac-toe",
-    title: "Tic Tac Toe",
-    desc: "Susun tiga tanda berurutan sebelum lawanmu.",
-    note: "",
-    path: "games/tic-tac-toe/index.html",
-    color: "#e8a23b",
-    status: "ready",
-  },
-  {
-    id: "ninja-samurai",
-    title: "Ninja Samurai",
-    desc: "Tebas, tangkis, dan bertahan hidup di dunia ninja.",
-    note: "",
-    path: "games/ninja-samurai/index.html",
-    color: "#c0563f",
-    status: "soon",
   },
   {
     id: "flappy-bird",
@@ -70,5 +52,13 @@ window.GAMES = [
     path: "games/KAMPUNGGAME/index.html",
     color: "#DED6C1",
     status: "ready",
+  },  {
+    id: "ninja-samurai",
+    title: "Ninja Samurai",
+    desc: "Tebas, tangkis, dan bertahan hidup di dunia ninja.",
+    note: "",
+    path: "games/ninja-samurai/index.html",
+    color: "#c0563f",
+    status: "soon",
   }
 ];
